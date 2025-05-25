@@ -69,10 +69,18 @@ export function LoginView() {
          });
 
          if (result?.error) {
-            setError(result.error);
+            setError(result.error)
          } else {
-            router.push("/dashboard");
-            router.refresh();
+            const session = await fetch("/api/auth/session").then(res => res.json());
+            if (session?.user) {
+               const userRole = session.user.role;
+               if (userRole === "ADMIN") {
+                  router.push("/admin/dashboard")
+               } else {
+                  router.push("/dashboard")
+               }
+               router.refresh()
+            }
          }
       } catch (error) {
          console.error(error);

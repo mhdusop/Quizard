@@ -59,13 +59,14 @@ export function RegisterView() {
       setError(null)
 
       try {
-         const response = await fetch("/api/register", {
+         const response = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                name: data.name,
                email: data.email,
                password: data.password,
+               confirmPassword: data.confirmPassword
             }),
          })
 
