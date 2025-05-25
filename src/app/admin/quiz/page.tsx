@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
    title: "Quiz | Quiz App",
-   description: "Create a new account to access the quiz app",
+   description: "Page for create Quiz",
 }
 
 export default function QuizPage() {
