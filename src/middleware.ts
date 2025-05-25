@@ -19,12 +19,12 @@ export async function middleware(req: NextRequest) {
    }
 
    if (isAuthPath && !token) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/auth/login", req.url));
    }
 
    if (
-      (req.nextUrl.pathname === "/login" ||
-         req.nextUrl.pathname === "/register") &&
+      (req.nextUrl.pathname === "/auth/login" ||
+         req.nextUrl.pathname === "/auth/register") &&
       token
    ) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -38,7 +38,7 @@ export const config = {
       "/dashboard/:path*",
       "/admin/:path*",
       "/quiz/:path*",
-      "/login",
-      "/register",
+      "/auth/login",
+      "/auth/register",
    ],
 };

@@ -5,5 +5,6 @@ export interface Quiz {
    title: string;
    description?: string;
    timeLimit: number;
+   questionCount: number;
    questions: Question[];
 }
