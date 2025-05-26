@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoadingState } from "./components/LoadingState";
-import { ErrorState } from "./components/ErrorState";
-import { NotFoundState } from "./components/NotFoundState";
+import { LoadingState } from "@/components/state/LoadingState";
+import { ErrorState } from "@/components/state/ErrorState";
+import { NotFoundState } from "@/components/state/NotFoundState";
 import { QuizHeaderInfo } from "./components/QuizHeaderInfo";
 import { QuizDetailCard } from "./components/QuizDetailCard";
 import { QuizAttemptsCard } from "./components/QuizAttemptCard";
@@ -37,7 +37,9 @@ export default function QuizDetailComponent({ id }: { id: string }) {
          try {
             setLoading(true);
 
-            const quizResponse = await fetch(`/api/user/quiz/${id}`);
+            const quizResponse = await fetch(`/api/user/quiz/${id}`, {
+               cache: "no-store",
+            });
             if (!quizResponse.ok) {
                throw new Error("Gagal memuat detail quiz");
             }

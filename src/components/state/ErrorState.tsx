@@ -4,6 +4,7 @@ import { HelpCircle } from "lucide-react";
 type ErrorStateProps = {
    message: string;
    onBackClick?: () => void;
+   onRetry?: () => void | Promise<void>;
 };
 
 export function ErrorState({ message, onBackClick }: ErrorStateProps) {
