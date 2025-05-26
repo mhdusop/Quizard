@@ -1,17 +1,16 @@
-// app/api/user/quizzes/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
    req: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
-      const quizId = params.id;
+      const resolvedParams = await params;
+      const id = resolvedParams.id;
 
-      // Fetch quiz details with question count
       const quiz = await prisma.quiz.findUnique({
-         where: { id: quizId },
+         where: { id },
          select: {
             id: true,
             title: true,
@@ -30,7 +29,6 @@ export async function GET(
          return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
       }
 
-      // Format the response
       const formattedQuiz = {
          id: quiz.id,
          title: quiz.title,

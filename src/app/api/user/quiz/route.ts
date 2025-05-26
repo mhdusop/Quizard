@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
    try {
-      // Fetch quizzes with question count
       const quizzes = await prisma.quiz.findMany({
          select: {
             id: true,
@@ -18,7 +17,6 @@ export async function GET() {
          },
       });
 
-      // Format the response
       const formattedQuizzes = quizzes.map((quiz) => ({
          id: quiz.id,
          title: quiz.title,

@@ -11,8 +11,8 @@ export default function UserNavbar() {
    return (
       <div className="w-full shadow-sm px-16 py-3">
          <div className="flex items-center justify-between">
-            <div className="font-bold text-xl">
-               Logo
+            <div className="font-bold text-xl italic text-primary">
+               Quizard
             </div>
             <NavigationMenu>
                <NavigationMenuList className="space-x-10 ">

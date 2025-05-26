@@ -1,4 +1,4 @@
-import QuizAttemptView from "@/views/user/quiz/QuizAttemptView";
+import QuizAttemptView from "@/views/user/quiz/quiz-attempt/QuizAttemptView";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,6 +6,7 @@ export const metadata: Metadata = {
    description: "Halaman untuk mengerjakan quiz",
 };
 
-export default function QuizAttemptPage({ params }: { params: { id: string } }) {
-   return <QuizAttemptView id={params.id} />;
+export default async function QuizAttemptPage({ params }: { params: Promise<{ id: string }> }) {
+   const resolvedParams = await params;
+   return <QuizAttemptView id={resolvedParams.id} />;
 }

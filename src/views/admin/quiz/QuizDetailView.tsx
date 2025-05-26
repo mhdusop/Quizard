@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Trash2 } from "lucide-react";
@@ -34,7 +34,7 @@ export default function QuizDetailView({ id }: { id: string }) {
    const [deletingQuestion, setDeletingQuestion] = useState<Question | null>(null);
    const [isDeleting, setIsDeleting] = useState(false);
 
-   const fetchQuiz = async () => {
+   const fetchQuiz = useCallback(async () => {
       try {
          setLoading(true);
          const response = await fetch(`/api/quiz/${id}`);
@@ -49,11 +49,11 @@ export default function QuizDetailView({ id }: { id: string }) {
       } finally {
          setLoading(false);
       }
-   };
+   }, [id]);
 
    useEffect(() => {
       fetchQuiz();
-   }, [id]);
+   }, [fetchQuiz]);
 
    const handleCreateQuestion = () => {
       setIsDialogOpen(true);

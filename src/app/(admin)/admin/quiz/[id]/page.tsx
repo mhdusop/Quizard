@@ -6,6 +6,11 @@ export const metadata: Metadata = {
    description: "Page for create detail Quiz",
 }
 
-export default function QuizDetailPage({ params }: { params: { id: string } }) {
-   return <QuizDetailView id={params.id} />
+export default async function AdminQuizDetailPage({
+   params
+}: {
+   params: Promise<{ id: string }>
+}) {
+   const resolvedParams = await params;
+   return <QuizDetailView id={resolvedParams.id} />;
 }

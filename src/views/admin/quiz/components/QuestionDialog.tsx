@@ -1,4 +1,3 @@
-// components/ui/questionDialog.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +32,6 @@ export function QuestionDialog({ open, onClose, quizId }: QuestionDialogProps) {
       if (field === "content") {
          updatedOptions[index].content = value as string;
       } else if (field === "isCorrect") {
-         // Jika opsi ini diatur sebagai benar, atur semua opsi lain menjadi salah
          if (value === true) {
             updatedOptions.forEach((option, i) => {
                option.isCorrect = i === index;
@@ -52,14 +50,12 @@ export function QuestionDialog({ open, onClose, quizId }: QuestionDialogProps) {
          return;
       }
 
-      // Pastikan setidaknya ada satu opsi benar
       const hasCorrectOption = options.some(option => option.isCorrect);
       if (!hasCorrectOption) {
          alert("Harus ada minimal satu opsi jawaban yang benar!");
          return;
       }
 
-      // Validasi opsi tidak kosong
       const emptyOptions = options.filter(option => !option.content.trim());
       if (emptyOptions.length > 0) {
          alert("Semua opsi jawaban harus diisi!");
@@ -97,7 +93,6 @@ export function QuestionDialog({ open, onClose, quizId }: QuestionDialogProps) {
          ]);
          onClose();
 
-         // Refresh halaman untuk menampilkan pertanyaan baru
          router.refresh();
       } catch (error) {
          console.error(error);

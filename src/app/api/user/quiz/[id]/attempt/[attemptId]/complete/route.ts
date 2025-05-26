@@ -1,8 +1,7 @@
-// app/api/user/quiz/[id]/attempt/[attemptId]/complete/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(
    req: NextRequest,
@@ -20,14 +19,11 @@ export async function POST(
 
       const userId = session.user.id;
 
-      // Await params before accessing properties
       const { id: quizId, attemptId } = await params;
 
-      // Parse request body
       const body = await req.json();
       const { score, endedAt, completed } = body;
 
-      // Validasi input
       if (score === undefined || !endedAt || completed === undefined) {
          return NextResponse.json(
             {
@@ -37,7 +33,6 @@ export async function POST(
          );
       }
 
-      // Periksa apakah attempt ada dan milik user yang sedang login
       const attempt = await prisma.quizAttempt.findUnique({
          where: { id: attemptId },
       });
@@ -58,7 +53,6 @@ export async function POST(
          );
       }
 
-      // Verifikasi bahwa attempt ini adalah untuk quiz yang dimaksud
       if (attempt.quizId !== quizId) {
          return NextResponse.json(
             { error: "ID quiz tidak sesuai dengan quiz attempt" },
@@ -73,7 +67,6 @@ export async function POST(
          );
       }
 
-      // Update attempt sebagai selesai
       const updatedAttempt = await prisma.quizAttempt.update({
          where: { id: attemptId },
          data: {
