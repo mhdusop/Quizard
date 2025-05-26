@@ -17,17 +17,12 @@ export default function UserNavbar() {
             <NavigationMenu>
                <NavigationMenuList className="space-x-10 ">
                   <NavigationMenuItem className="hover-">
-                     <Link href="/admin/dashboard" className="text-sm">
+                     <Link href="/user/dashboard" className="text-sm">
                         Dashboard
                      </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem className="hover-">
-                     <Link href="/admin/users" className="text-sm">
-                        Users
-                     </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem className="hover-">
-                     <Link href="/admin/quiz" className="text-sm">
+                     <Link href="/user/quiz" className="text-sm">
                         Quiz
                      </Link>
                   </NavigationMenuItem>
