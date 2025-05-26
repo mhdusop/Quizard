@@ -3,10 +3,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
    req: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
-      if (!params.id) {
+      const resolvedParams = await params;
+      const id = resolvedParams.id;
+
+      if (!id) {
          return NextResponse.json(
             { error: "ID pertanyaan tidak valid" },
             { status: 400 }
@@ -14,7 +17,7 @@ export async function DELETE(
       }
 
       const question = await prisma.question.findUnique({
-         where: { id: params.id },
+         where: { id },
       });
 
       if (!question) {
@@ -25,7 +28,7 @@ export async function DELETE(
       }
 
       await prisma.question.delete({
-         where: { id: params.id },
+         where: { id },
       });
 
       return NextResponse.json({ message: "Pertanyaan berhasil dihapus" });

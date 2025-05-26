@@ -49,7 +49,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
    ];
 
    return (
-      <Card>
+      <Card className='py-0'>
          <CardContent className="p-6">
             <h2 className="text-lg font-bold mb-4">Statistik Anda</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

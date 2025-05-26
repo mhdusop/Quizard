@@ -104,7 +104,7 @@ export default function UserDashboardView() {
    return (
       <div className="container mx-auto p-4">
          <DashboardHeader
-            userName={userName}
+            name={userName}
             greeting="Selamat datang kembali"
          />
 

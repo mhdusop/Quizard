@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export async function GET(
    req: NextRequest,
-   { params }: { params: { id: string } }
+   { params }: { params: Promise<{ id: string }> }
 ) {
    try {
       const session = await getServerSession(authOptions);
+      const resolvedParams = await params;
+      const id = resolvedParams.id;
 
       if (!session?.user) {
          return NextResponse.json(
@@ -17,7 +19,7 @@ export async function GET(
          );
       }
 
-      const quizId = params.id;
+      const quizId = id;
 
       const questions = await prisma.question.findMany({
          where: { quizId },
