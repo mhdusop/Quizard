@@ -50,9 +50,6 @@ export default function QuizDetailComponent({ id }: { id: string }) {
                ? await attemptsResponse.json()
                : { attempts: [] };
 
-            console.log("Quiz data:", quizData);
-            console.log("Attempts data:", attemptsData);
-
             setQuiz(quizData.quiz);
             setPastAttempts(attemptsData.attempts || []);
          } catch (error) {

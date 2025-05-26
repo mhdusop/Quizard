@@ -85,7 +85,6 @@ export function useQuizAttempt(id: string) {
             }
 
             const data = await response.json();
-            console.log("Quiz data:", data);
 
             if (!data.quiz) {
                throw new Error("Data quiz tidak ditemukan");
@@ -112,7 +111,6 @@ export function useQuizAttempt(id: string) {
                );
                if (questionsResponse.ok) {
                   const questionsData = await questionsResponse.json();
-                  console.log("Questions data:", questionsData);
 
                   if (
                      questionsData.questions &&
@@ -230,8 +228,6 @@ export function useQuizAttempt(id: string) {
                   setSelectedOption(savedAnswer.selectedOptionId);
                }
             }
-
-            console.log("Melanjutkan quiz dari localStorage");
          } catch (error) {
             console.error("Error resuming quiz:", error);
             startNewAttempt(quizData);
