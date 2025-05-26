@@ -1,0 +1,82 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Award } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+type PastAttempt = {
+   id: string;
+   score: number | null;
+   completedAt: string;
+};
+
+type QuizAttemptsCardProps = {
+   attempts: PastAttempt[];
+};
+
+export function QuizAttemptsCard({ attempts }: QuizAttemptsCardProps) {
+   const router = useRouter();
+
+   const formatDate = (dateString: string) => {
+      const options: Intl.DateTimeFormatOptions = {
+         day: "numeric",
+         month: "long",
+         year: "numeric"
+      };
+      return new Date(dateString).toLocaleDateString("id-ID", options);
+   };
+
+   return (
+      <Card>
+         <CardHeader>
+            <CardTitle className="text-md">Riwayat Pengerjaan</CardTitle>
+         </CardHeader>
+         <CardContent>
+            {attempts.length === 0 ? (
+               <div className="text-center p-4 text-gray-500">
+                  <p>Anda belum pernah mengerjakan quiz ini</p>
+               </div>
+            ) : (
+               <div className="space-y-3">
+                  {attempts.map(attempt => (
+                     <AttemptItem
+                        key={attempt.id}
+                        attempt={attempt}
+                        formatDate={formatDate}
+                        onViewDetail={() => router.push(`/user/attempts/${attempt.id}`)}
+                     />
+                  ))}
+               </div>
+            )}
+         </CardContent>
+      </Card>
+   );
+}
+
+type AttemptItemProps = {
+   attempt: PastAttempt;
+   formatDate: (date: string) => string;
+   onViewDetail: () => void;
+};
+
+function AttemptItem({ attempt, formatDate, onViewDetail }: AttemptItemProps) {
+   return (
+      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+         <div>
+            <div className="text-sm text-gray-500">
+               {formatDate(attempt.completedAt)}
+            </div>
+            <div className="flex items-center">
+               <Award className="h-4 w-4 mr-1 text-primary" />
+               <span className="font-medium">{attempt.score}%</span>
+            </div>
+         </div>
+         <Button
+            size="sm"
+            onClick={onViewDetail}
+            className="cursor-pointer"
+         >
+            Detail
+         </Button>
+      </div>
+   );
+}
