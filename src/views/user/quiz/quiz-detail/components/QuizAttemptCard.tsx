@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 type PastAttempt = {
    id: string;
@@ -14,8 +12,6 @@ type QuizAttemptsCardProps = {
 };
 
 export function QuizAttemptsCard({ attempts }: QuizAttemptsCardProps) {
-   const router = useRouter();
-
    const formatDate = (dateString: string) => {
       const options: Intl.DateTimeFormatOptions = {
          day: "numeric",
@@ -42,7 +38,6 @@ export function QuizAttemptsCard({ attempts }: QuizAttemptsCardProps) {
                         key={attempt.id}
                         attempt={attempt}
                         formatDate={formatDate}
-                        onViewDetail={() => router.push(`/user/attempts/${attempt.id}`)}
                      />
                   ))}
                </div>
@@ -55,13 +50,12 @@ export function QuizAttemptsCard({ attempts }: QuizAttemptsCardProps) {
 type AttemptItemProps = {
    attempt: PastAttempt;
    formatDate: (date: string) => string;
-   onViewDetail: () => void;
 };
 
-function AttemptItem({ attempt, formatDate, onViewDetail }: AttemptItemProps) {
+function AttemptItem({ attempt, formatDate }: AttemptItemProps) {
    return (
-      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-         <div>
+      <div className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+         <div className="flex items-center justify-between w-full">
             <div className="text-sm text-gray-500">
                {formatDate(attempt.completedAt)}
             </div>
@@ -70,13 +64,6 @@ function AttemptItem({ attempt, formatDate, onViewDetail }: AttemptItemProps) {
                <span className="font-medium">{attempt.score}%</span>
             </div>
          </div>
-         <Button
-            size="sm"
-            onClick={onViewDetail}
-            className="cursor-pointer"
-         >
-            Detail
-         </Button>
       </div>
    );
 }

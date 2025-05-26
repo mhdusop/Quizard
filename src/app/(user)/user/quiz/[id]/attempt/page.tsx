@@ -1,4 +1,4 @@
-import QuizAttemptView from "@/views/user/quiz/QuizAttemptView";
+import QuizAttemptView from "@/views/user/quiz/quiz-attempt/QuizAttemptView";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
