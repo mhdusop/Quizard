@@ -62,7 +62,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
    const router = useRouter();
    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-   // Fungsi untuk memeriksa dan memuat data yang tersimpan dalam localStorage
    const checkLocalStorage = () => {
       if (typeof window !== "undefined") {
          const savedAttempt = localStorage.getItem(`quiz_attempt_${id}`);
@@ -80,13 +79,11 @@ export default function QuizAttemptView({ id }: { id: string }) {
       return null;
    };
 
-   // Fetch quiz data
    useEffect(() => {
       const fetchQuiz = async () => {
          try {
             setLoading(true);
 
-            // Fetch quiz detail
             const response = await fetch(`/api/user/quiz/${id}`, {
                cache: "no-store",
             });
@@ -102,13 +99,11 @@ export default function QuizAttemptView({ id }: { id: string }) {
                throw new Error("Data quiz tidak ditemukan");
             }
 
-            // Simpan data quiz dasar
             const quizData = {
                ...data.quiz,
-               questions: [] // Inisialisasi questions sebagai array kosong
+               questions: []
             };
 
-            // Periksa apakah quiz memiliki pertanyaan berdasarkan questionCount
             if (!data.quiz.questionCount || data.quiz.questionCount === 0) {
                setError("Quiz ini tidak memiliki pertanyaan");
                setQuiz(quizData);
@@ -116,7 +111,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
                return;
             }
 
-            // Fetch pertanyaan quiz secara terpisah
             try {
                const questionsResponse = await fetch(`/api/user/quiz/${id}/question`, {
                   cache: "no-store",
@@ -140,11 +134,9 @@ export default function QuizAttemptView({ id }: { id: string }) {
 
             setQuiz(quizData);
 
-            // Periksa lagi apakah quiz sekarang memiliki pertanyaan
             if (!quizData.questions || quizData.questions.length === 0) {
                setError("Quiz ini tidak memiliki pertanyaan");
             } else {
-               // Jika ada pertanyaan, lanjutkan dengan attempt
                checkSavedAttemptOrStart(quizData);
             }
          } catch (error) {
@@ -158,11 +150,9 @@ export default function QuizAttemptView({ id }: { id: string }) {
       fetchQuiz();
    }, [id]);
 
-   // Timer logic
    useEffect(() => {
       if (timeRemaining === null || isComplete) return;
 
-      // Jika waktu habis, selesaikan quiz
       if (timeRemaining <= 0) {
          if (attempt && quiz && quiz.questions.length > 0) {
             completeQuiz(attempt.answers);
@@ -170,7 +160,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
          return;
       }
 
-      // Set up timer
       timerRef.current = setInterval(() => {
          setTimeRemaining(prev => {
             if (prev === null || prev <= 1) {
@@ -179,7 +168,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
             }
 
             const newValue = prev - 1;
-            // Save to localStorage
             if (typeof window !== "undefined") {
                localStorage.setItem(`quiz_time_${id}`, newValue.toString());
             }
@@ -187,7 +175,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
          });
       }, 1000);
 
-      // Clean up timer
       return () => {
          if (timerRef.current) {
             clearInterval(timerRef.current);
@@ -195,7 +182,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
       };
    }, [timeRemaining, isComplete, attempt, quiz, id]);
 
-   // Clean up timer on unmount
    useEffect(() => {
       return () => {
          if (timerRef.current) {
@@ -204,20 +190,16 @@ export default function QuizAttemptView({ id }: { id: string }) {
       };
    }, []);
 
-   // Check for saved attempt or start new one
    const checkSavedAttemptOrStart = (quizData: Quiz) => {
-      // Validasi quiz data
       if (!quizData) {
          setError("Data quiz tidak valid");
          return;
       }
 
-      // Pastikan questions adalah array
       if (!Array.isArray(quizData.questions)) {
          quizData.questions = [];
       }
 
-      // Periksa apakah quiz memiliki pertanyaan
       if (quizData.questions.length === 0) {
          setError("Quiz ini tidak memiliki pertanyaan");
          return;
@@ -227,16 +209,13 @@ export default function QuizAttemptView({ id }: { id: string }) {
 
       if (savedData && !savedData.attempt.completed) {
          try {
-            // Resume quiz from localStorage
             setAttempt(savedData.attempt);
             setTimeRemaining(savedData.timeRemaining || quizData.timeLimit);
 
-            // Validasi index pertanyaan
             const maxIndex = Math.max(0, quizData.questions.length - 1);
             const safeIndex = Math.min(savedData.questionIndex || 0, maxIndex);
             setCurrentQuestionIndex(safeIndex);
 
-            // Set selected option for current question if exists
             const currentQuestionId = quizData.questions[safeIndex]?.id;
             if (currentQuestionId) {
                const savedAnswer = savedData.attempt.answers.find(
@@ -250,16 +229,13 @@ export default function QuizAttemptView({ id }: { id: string }) {
             console.log("Melanjutkan quiz dari localStorage");
          } catch (error) {
             console.error("Error resuming quiz:", error);
-            // Jika terjadi error saat meresume, mulai attempt baru
             startNewAttempt(quizData);
          }
       } else {
-         // Start a new attempt
          startNewAttempt(quizData);
       }
    };
 
-   // Start a new quiz attempt
    const startNewAttempt = async (quizData: Quiz) => {
       try {
          setSubmitting(true);
@@ -283,7 +259,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
          setTimeRemaining(quizData.timeLimit);
          setCurrentQuestionIndex(0);
 
-         // Save to localStorage
          if (typeof window !== "undefined") {
             localStorage.setItem(`quiz_attempt_${id}`, JSON.stringify(newAttempt));
             localStorage.setItem(`quiz_time_${id}`, quizData.timeLimit.toString());
@@ -297,35 +272,29 @@ export default function QuizAttemptView({ id }: { id: string }) {
       }
    };
 
-   // Handle answer selection
    const handleSelectOption = (optionId: string) => {
       if (submitting || isComplete) return;
       setSelectedOption(optionId);
    };
 
-   // Handle answer submission
    const handleSubmitAnswer = async () => {
       if (!quiz || !attempt || !selectedOption || submitting || isComplete) return;
 
       setSubmitting(true);
 
       try {
-         // Get the current question
          const currentQuestion = quiz.questions[currentQuestionIndex];
          if (!currentQuestion) return;
 
-         // Get the selected option
          const selectedOptionObj = currentQuestion.options.find(opt => opt.id === selectedOption);
          if (!selectedOptionObj) return;
 
-         // Create new answer
          const newAnswer: Answer = {
             questionId: currentQuestion.id,
             selectedOptionId: selectedOption,
             isCorrect: selectedOptionObj.isCorrect,
          };
 
-         // Update attempt
          const updatedAttempt = { ...attempt };
          const existingAnswerIndex = updatedAttempt.answers.findIndex(
             a => a.questionId === currentQuestion.id
@@ -339,12 +308,10 @@ export default function QuizAttemptView({ id }: { id: string }) {
 
          setAttempt(updatedAttempt);
 
-         // Save to localStorage
          if (typeof window !== "undefined") {
             localStorage.setItem(`quiz_attempt_${id}`, JSON.stringify(updatedAttempt));
          }
 
-         // Save answer to server - PERBAIKAN PATH API
          await fetch(`/api/user/quiz/${id}/attempt/${attempt.id}/answer`, {
             method: "POST",
             cache: "no-store",
@@ -358,11 +325,9 @@ export default function QuizAttemptView({ id }: { id: string }) {
             }),
          });
 
-         // Move to next question
          if (currentQuestionIndex < (quiz.questions.length - 1)) {
             goToNextQuestion();
          } else {
-            // If it's the last question, complete the quiz
             completeQuiz(updatedAttempt.answers);
          }
       } catch (error) {
@@ -373,14 +338,11 @@ export default function QuizAttemptView({ id }: { id: string }) {
       }
    };
 
-   // Go to next question
    const goToNextQuestion = () => {
       setCurrentQuestionIndex(prev => {
          const newIndex = prev + 1;
-         // Reset selected option
          setSelectedOption(null);
 
-         // Check if there's an answer for the next question
          if (quiz && attempt) {
             const nextQuestionId = quiz.questions[newIndex]?.id;
             const existingAnswer = attempt.answers.find(a => a.questionId === nextQuestionId);
@@ -389,7 +351,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
             }
          }
 
-         // Save question index to localStorage
          if (typeof window !== "undefined") {
             localStorage.setItem(`quiz_question_index_${id}`, newIndex.toString());
          }
@@ -398,21 +359,18 @@ export default function QuizAttemptView({ id }: { id: string }) {
       });
    };
 
-   // Calculate results and complete quiz
    const completeQuiz = async (answers: Answer[]) => {
       if (!quiz || isComplete) return;
 
       try {
          setSubmitting(true);
 
-         // Calculate results
          const totalQuestions = quiz.questions.length;
          const correctCount = answers.filter(a => a.isCorrect === true).length;
          const incorrectCount = answers.filter(a => a.isCorrect === false).length;
          const unansweredCount = totalQuestions - answers.length;
          const score = Math.round((correctCount / totalQuestions) * 100);
 
-         // Set results
          setResults({
             correctCount,
             incorrectCount,
@@ -423,7 +381,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
 
          setIsComplete(true);
 
-         // Save completion to server - PERBAIKAN PATH API
          if (attempt) {
             await fetch(`/api/user/quiz/${id}/attempt/${attempt.id}/complete`, {
                method: "POST",
@@ -438,7 +395,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
                }),
             });
 
-            // Clear localStorage data
             if (typeof window !== "undefined") {
                localStorage.removeItem(`quiz_attempt_${id}`);
                localStorage.removeItem(`quiz_time_${id}`);
@@ -453,14 +409,12 @@ export default function QuizAttemptView({ id }: { id: string }) {
       }
    };
 
-   // Format time (seconds) to MM:SS
    const formatTime = (seconds: number): string => {
       const mins = Math.floor(seconds / 60);
       const secs = seconds % 60;
       return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
    };
 
-   // Show loading state
    if (loading) {
       return (
          <div className="flex justify-center items-center min-h-[60vh]">
@@ -473,7 +427,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
       );
    }
 
-   // Show error state
    if (error) {
       return (
          <div className="flex justify-center items-center min-h-[60vh]">
@@ -489,7 +442,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
       );
    }
 
-   // Show completion results
    if (isComplete && results) {
       return (
          <div className="container mx-auto p-4 max-w-3xl">
@@ -585,7 +537,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
       );
    }
 
-   // Show current question
    if (quiz && quiz.questions && quiz.questions.length > 0 && currentQuestionIndex < quiz.questions.length) {
       const currentQuestion = quiz.questions[currentQuestionIndex];
       const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
@@ -683,7 +634,6 @@ export default function QuizAttemptView({ id }: { id: string }) {
       );
    }
 
-   // Fallback (should never reach here if implementation is correct)
    return (
       <div className="flex justify-center items-center min-h-[60vh]">
          <div className="text-center max-w-md p-6 bg-yellow-50 rounded-lg">

@@ -1,4 +1,3 @@
-// views/user/quiz/QuizViewComponent.tsx
 "use client";
 
 import { useEffect, useState } from "react";

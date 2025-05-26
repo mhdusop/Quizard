@@ -1,4 +1,3 @@
-// app/api/user/quizzes/[id]/attempt/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -13,7 +12,6 @@ export async function GET(
       const userId = session!.user.id;
       const quizId = params.id;
 
-      // Fetch completed attempts for this quiz by this user
       const attempts = await prisma.quizAttempt.findMany({
          where: {
             userId,
@@ -23,7 +21,7 @@ export async function GET(
          orderBy: {
             endedAt: "desc",
          },
-         take: 5, // Limit to recent 5 attempts
+         take: 5,
          select: {
             id: true,
             score: true,
@@ -57,7 +55,6 @@ export async function POST(
       const userId = session!.user.id;
       const quizId = params.id;
 
-      // Check if quiz exists and has questions
       const quiz = await prisma.quiz.findUnique({
          where: { id: quizId },
          include: {
@@ -78,7 +75,6 @@ export async function POST(
          );
       }
 
-      // Check for incomplete attempts
       const incompleteAttempt = await prisma.quizAttempt.findFirst({
          where: {
             userId,
@@ -87,7 +83,6 @@ export async function POST(
          },
       });
 
-      // If there's an incomplete attempt, return that instead of creating a new one
       if (incompleteAttempt) {
          return NextResponse.json(
             { attempt: incompleteAttempt, resumed: true },
@@ -95,7 +90,6 @@ export async function POST(
          );
       }
 
-      // Create a new quiz attempt
       const attempt = await prisma.quizAttempt.create({
          data: {
             userId,

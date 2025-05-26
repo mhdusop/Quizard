@@ -15,12 +15,11 @@ export async function POST(req: NextRequest) {
          );
       }
 
-      // Tambahkan tipe pertanyaan (type)
       const question = await prisma.question.create({
          data: {
             content,
             quizId,
-            type: "multiple_choice", // Menambahkan field 'type' yang dibutuhkan
+            type: "multiple_choice",
             options: {
                create: options.map(
                   (option: { content: string; isCorrect: boolean }) => ({

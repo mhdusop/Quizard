@@ -35,15 +35,12 @@ export default function QuizDetailComponent({ id }: { id: string }) {
          try {
             setLoading(true);
 
-            // Fetch quiz details - ini sudah benar dengan path /api/user/quiz/${id}
             const quizResponse = await fetch(`/api/user/quiz/${id}`);
             if (!quizResponse.ok) {
                throw new Error("Gagal memuat detail quiz");
             }
             const quizData = await quizResponse.json();
 
-            // Fetch past attempts - path ini perlu diubah dari /quiz/${id}/attempt menjadi /quiz/${id}/attempts
-            // karena endpoint GET mengembalikan daftar attempts (jamak)
             const attemptsResponse = await fetch(`/api/user/quiz/${id}/attempt`);
             const attemptsData = attemptsResponse.ok
                ? await attemptsResponse.json()
@@ -119,7 +116,6 @@ export default function QuizDetailComponent({ id }: { id: string }) {
       );
    }
 
-   // Format date
    const formatDate = (dateString: string) => {
       const options: Intl.DateTimeFormatOptions = {
          day: "numeric",
@@ -129,7 +125,6 @@ export default function QuizDetailComponent({ id }: { id: string }) {
       return new Date(dateString).toLocaleDateString("id-ID", options);
    };
 
-   // Format time (seconds to minutes)
    const formatTime = (seconds: number) => {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;

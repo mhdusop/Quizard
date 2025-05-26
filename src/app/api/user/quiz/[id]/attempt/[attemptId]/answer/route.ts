@@ -1,4 +1,3 @@
-// app/api/user/quiz/[id]/attempt/[attemptId]/answer/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -20,14 +19,11 @@ export async function POST(
 
       const userId = session.user.id;
 
-      // Await params before accessing properties
       const { id: quizId, attemptId } = await params;
 
-      // Parse request body
       const body = await req.json();
       const { questionId, selectedOptionId, isCorrect } = body;
 
-      // Validasi input
       if (!questionId || selectedOptionId === undefined) {
          return NextResponse.json(
             { error: "ID pertanyaan dan opsi yang dipilih harus diisi" },
@@ -35,7 +31,6 @@ export async function POST(
          );
       }
 
-      // Periksa apakah attempt ada dan milik user yang sedang login
       const attempt = await prisma.quizAttempt.findUnique({
          where: { id: attemptId },
       });
@@ -56,7 +51,6 @@ export async function POST(
          );
       }
 
-      // Verifikasi bahwa attempt ini adalah untuk quiz yang dimaksud
       if (attempt.quizId !== quizId) {
          return NextResponse.json(
             { error: "ID quiz tidak sesuai dengan quiz attempt" },
@@ -73,7 +67,6 @@ export async function POST(
          );
       }
 
-      // Periksa apakah jawaban untuk pertanyaan ini sudah ada
       const existingAnswer = await prisma.answer.findFirst({
          where: {
             questionId,
@@ -84,7 +77,6 @@ export async function POST(
       let answer;
 
       if (existingAnswer) {
-         // Update jawaban yang sudah ada
          answer = await prisma.answer.update({
             where: { id: existingAnswer.id },
             data: {
@@ -93,7 +85,6 @@ export async function POST(
             },
          });
       } else {
-         // Buat jawaban baru
          answer = await prisma.answer.create({
             data: {
                questionId,

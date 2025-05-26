@@ -19,7 +19,6 @@ export async function GET(
 
       const quizId = params.id;
 
-      // Fetch questions for the quiz
       const questions = await prisma.question.findMany({
          where: { quizId },
          include: {
