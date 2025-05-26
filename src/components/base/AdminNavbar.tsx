@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
 import { LogOut } from "lucide-react"
 
-export default function NavbarComponent() {
+export default function AdminNavbar() {
    return (
       <div className="w-full shadow-sm px-16 py-3">
          <div className="flex items-center justify-between">

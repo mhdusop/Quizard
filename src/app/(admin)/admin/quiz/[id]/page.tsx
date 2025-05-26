@@ -1,4 +1,4 @@
-import QuizDetailView from "@/views/quiz/QuizDetailView";
+import QuizDetailView from "@/views/admin/quiz/QuizDetailView";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
