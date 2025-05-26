@@ -26,7 +26,9 @@ export default function QuizView() {
    const fetchQuizzes = async () => {
       setIsLoadingQuizzes(true);
       try {
-         const response = await fetch("/api/quiz");
+         const response = await fetch("/api/quiz", {
+            cache: "no-store"
+         });
          const data = await response.json();
          setQuizzes(data.quizzes || []);
       } catch (error) {
