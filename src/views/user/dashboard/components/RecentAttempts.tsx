@@ -35,13 +35,6 @@ export function RecentAttempts({ attempts, onAttemptSelect }: RecentAttemptsProp
       <Card>
          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Quiz Terakhir</CardTitle>
-            <Button
-               variant="outline"
-               size="sm"
-               onClick={() => window.location.href = '/user/attempts'}
-            >
-               Lihat Semua
-            </Button>
          </CardHeader>
          <CardContent>
             {attempts.length === 0 ? (
@@ -68,7 +61,7 @@ export function RecentAttempts({ attempts, onAttemptSelect }: RecentAttemptsProp
                               variant="ghost"
                               size="sm"
                               onClick={() => onAttemptSelect(attempt.id)}
-                              className="ml-2"
+                              className="ml-2 hidden"
                            >
                               Detail
                            </Button>

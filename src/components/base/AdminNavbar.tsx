@@ -16,22 +16,17 @@ export default function AdminNavbar() {
             </div>
             <NavigationMenu>
                <NavigationMenuList className="space-x-10 ">
-                  <NavigationMenuItem className="hover-">
+                  <NavigationMenuItem>
                      <Link href="/admin/dashboard" className="text-sm">
                         Dashboard
                      </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem className="hover-">
-                     <Link href="/admin/users" className="text-sm">
-                        Users
-                     </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem className="hover-">
+                  <NavigationMenuItem>
                      <Link href="/admin/quiz" className="text-sm">
                         Quiz
                      </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem className="hover-">
+                  <NavigationMenuItem>
 
                   </NavigationMenuItem>
                </NavigationMenuList>
