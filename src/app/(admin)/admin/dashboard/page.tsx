@@ -1,8 +1,11 @@
+import AdminDashboardView from "@/views/admin/dashboard/AdminDashboardView";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Admin Dashboard | Quiz App",
+   description: "Page for admin to manage quizzes and users",
+}
+
 export default function AdminDashboard() {
-   return (
-      <div>
-         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-         <p className="mt-4">Welcome to the admin dashboard. Here you can manage users, settings, and more.</p>
-      </div>
-   );
+   return <AdminDashboardView />
 }

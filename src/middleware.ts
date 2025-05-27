@@ -4,6 +4,7 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
    const authPaths = ["/dashboard", "/quiz"];
+   const path = req.nextUrl.pathname;
 
    const isAuthPath = authPaths.some((path) =>
       req.nextUrl.pathname.startsWith(path)
@@ -30,11 +31,16 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
    }
 
+   if (path === "/") {
+      return NextResponse.redirect(new URL("/auth/login", req.url));
+   }
+
    return NextResponse.next();
 }
 
 export const config = {
    matcher: [
+      "/",
       "/dashboard/:path*",
       "/admin/:path*",
       "/quiz/:path*",

@@ -94,7 +94,7 @@ export default function QuizView() {
                {quizzes.map((quiz) => (
                   <Card
                      key={quiz.id}
-                     className="cursor-pointer hover:shadow-lg transition-shadow"
+                     className="cursor-pointer hover:shadow-lg border-t-primary border-t-6"
                      onClick={() => router.push(`/admin/quiz/${quiz.id}`)}
                   >
                      <CardHeader>
